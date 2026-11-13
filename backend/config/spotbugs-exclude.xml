@@ -7,4 +7,128 @@
 
      Unlike the baseline, this file may grow, but every entry is a reviewed decision. -->
 <FindBugsFilter>
+    <!-- DataInitializer intentionally retains Spring-injected repositories and services.
+         These are shared framework dependencies, not objects that should be defensively copied. -->
+    <Match>
+        <Class name="team.projectpulse.seed.DataInitializer"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+
+    <!-- Spring DI: these constructor fields intentionally retain shared Spring-managed dependencies.
+         Copying a service or repository would break its shared lifecycle and proxy semantics.
+         Limit this exception to EI_EXPOSE_REP2 on each named constructor field. -->
+    <Match><Class name="team.projectpulse.activity.ActivityController"/><Method name="&lt;init&gt;"/><Field name="activityService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.course.CourseController"/><Method name="&lt;init&gt;"/><Field name="courseService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.evaluation.EvaluationController"/><Method name="&lt;init&gt;"/><Field name="evaluationService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.instructor.InstructorController"/><Method name="&lt;init&gt;"/><Field name="instructorService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.instructor.InstructorService"/><Method name="&lt;init&gt;"/><Field name="userInvitationService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.notification.ReminderController"/><Method name="&lt;init&gt;"/><Field name="sectionService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.notification.SubmissionStatusService"/><Method name="&lt;init&gt;"/><Field name="activityService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.notification.SubmissionStatusService"/><Method name="&lt;init&gt;"/><Field name="evaluationService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.notification.WeeklyReminderScheduler"/><Method name="&lt;init&gt;"/><Field name="sectionService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.collaboration.CommentController"/><Method name="&lt;init&gt;"/><Field name="commentService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.document.DocumentSectionService"/><Method name="&lt;init&gt;"/><Field name="requirementArtifactService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.glossary.GlossaryService"/><Method name="&lt;init&gt;"/><Field name="requirementArtifactService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.requirement.ArtifactLinkController"/><Method name="&lt;init&gt;"/><Field name="artifactLinkService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.requirement.RequirementArtifactController"/><Method name="&lt;init&gt;"/><Field name="requirementArtifactService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.usecase.UseCaseService"/><Method name="&lt;init&gt;"/><Field name="requirementArtifactService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.rubric.CriterionController"/><Method name="&lt;init&gt;"/><Field name="criterionService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.rubric.RubricController"/><Method name="&lt;init&gt;"/><Field name="rubricService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.section.SectionController"/><Method name="&lt;init&gt;"/><Field name="sectionService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.section.SectionController"/><Method name="&lt;init&gt;"/><Field name="userInvitationService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.section.SectionService"/><Method name="&lt;init&gt;"/><Field name="userInvitationService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.student.StudentController"/><Method name="&lt;init&gt;"/><Field name="studentService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.student.StudentService"/><Method name="&lt;init&gt;"/><Field name="userInvitationService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.team.TeamController"/><Method name="&lt;init&gt;"/><Field name="teamService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.user.UserController"/><Method name="&lt;init&gt;"/><Field name="resetPasswordService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.user.UserService"/><Method name="&lt;init&gt;"/><Field name="resetPasswordService"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.user.resetpassword.ResetPasswordService"/><Method name="&lt;init&gt;"/><Field name="resetPasswordTokenRepository"/><Bug pattern="EI_EXPOSE_REP2"/></Match>
+
+    <!-- JPA: these named relationship, auditing, and persistent collection fields intentionally
+         share entity identity and managed collection state. This includes Section.activeWeeks
+         (@ElementCollection). Defensive copying is enforced at DTO/data boundaries instead.
+         Only the listed D1 patterns on these fields are excluded; other entity fields remain checked. -->
+    <Match><Class name="team.projectpulse.activity.Activity"/><Field name="student"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.activity.Activity"/><Field name="team"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.course.Course"/><Field name="courseAdmin"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.course.Course"/><Field name="criteria"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.course.Course"/><Field name="instructors"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.course.Course"/><Field name="rubrics"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.course.Course"/><Field name="sections"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.evaluation.PeerEvaluation"/><Field name="evaluatee"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.evaluation.PeerEvaluation"/><Field name="evaluator"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.evaluation.PeerEvaluation"/><Field name="ratings"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.evaluation.Rating"/><Field name="criterion"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.evaluation.Rating"/><Field name="peerEvaluation"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.instructor.Instructor"/><Field name="courses"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.instructor.Instructor"/><Field name="defaultCourse"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.instructor.Instructor"/><Field name="defaultSection"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.instructor.Instructor"/><Field name="sections"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.instructor.Instructor"/><Field name="teams"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.collaboration.Comment"/><Field name="author"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.collaboration.Comment"/><Field name="commentThread"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.collaboration.CommentThread"/><Field name="artifact"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.collaboration.CommentThread"/><Field name="comments"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.collaboration.CommentThread"/><Field name="createdBy"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.collaboration.CommentThread"/><Field name="document"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.collaboration.CommentThread"/><Field name="documentSection"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.collaboration.CommentThread"/><Field name="team"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.collaboration.CommentThread"/><Field name="updatedBy"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.ram.document.DocumentSection"/><Field name="commentThreads"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.document.DocumentSection"/><Field name="createdBy"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.ram.document.DocumentSection"/><Field name="document"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.document.DocumentSection"/><Field name="lock"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.ram.document.DocumentSection"/><Field name="requirementArtifacts"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.document.DocumentSection"/><Field name="updatedBy"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.ram.document.DocumentSectionLock"/><Field name="documentSection"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.document.DocumentSectionLock"/><Field name="lockedBy"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.document.RequirementDocument"/><Field name="commentThreads"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.document.RequirementDocument"/><Field name="sections"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.document.RequirementDocument"/><Field name="team"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.requirement.ArtifactKeySequence"/><Field name="team"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.requirement.ArtifactLink"/><Field name="createdBy"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.ram.requirement.ArtifactLink"/><Field name="sourceArtifact"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.requirement.ArtifactLink"/><Field name="targetArtifact"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.requirement.ArtifactLink"/><Field name="team"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.requirement.ArtifactLink"/><Field name="updatedBy"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.ram.requirement.RequirementArtifact"/><Field name="commentThreads"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.requirement.RequirementArtifact"/><Field name="createdBy"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.ram.requirement.RequirementArtifact"/><Field name="incomingArtifactLinks"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.requirement.RequirementArtifact"/><Field name="outgoingArtifactLinks"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.requirement.RequirementArtifact"/><Field name="sourceDocumentSection"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.requirement.RequirementArtifact"/><Field name="team"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.requirement.RequirementArtifact"/><Field name="updatedBy"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.ram.usecase.UseCase"/><Field name="artifact"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.usecase.UseCase"/><Field name="lock"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.ram.usecase.UseCase"/><Field name="mainSteps"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.usecase.UseCase"/><Field name="postconditions"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.usecase.UseCase"/><Field name="preconditions"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.usecase.UseCase"/><Field name="primaryActor"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.usecase.UseCase"/><Field name="secondaryActors"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.usecase.UseCaseExtension"/><Field name="baseStep"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.usecase.UseCaseExtension"/><Field name="steps"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.ram.usecase.UseCaseExtensionStep"/><Field name="extension"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.usecase.UseCaseLock"/><Field name="lockedBy"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.usecase.UseCaseLock"/><Field name="useCase"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.ram.usecase.UseCaseMainStep"/><Field name="extensions"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.ram.usecase.UseCaseMainStep"/><Field name="useCase"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.rubric.Criterion"/><Field name="course"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.rubric.Rubric"/><Field name="course"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.rubric.Rubric"/><Field name="criteria"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.section.Section"/><Field name="activeWeeks"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.section.Section"/><Field name="course"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.section.Section"/><Field name="instructors"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.section.Section"/><Field name="rubric"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.section.Section"/><Field name="students"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.section.Section"/><Field name="teams"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+    <Match><Class name="team.projectpulse.student.Student"/><Field name="section"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.student.Student"/><Field name="team"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.team.Team"/><Field name="instructor"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.team.Team"/><Field name="section"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
+    <Match><Class name="team.projectpulse.team.Team"/><Field name="students"/><Bug pattern="EI_EXPOSE_REP"/></Match>
+
+    <!-- Authentication: MyUserPrincipal intentionally retains and exposes its domain-user reference
+         for authenticated-user resolution. Copying the entity graph would change that contract.
+         This exception applies only to peerEvaluationUser and the two D1 patterns. -->
+    <Match><Class name="team.projectpulse.user.MyUserPrincipal"/><Field name="peerEvaluationUser"/><Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/></Match>
 </FindBugsFilter>

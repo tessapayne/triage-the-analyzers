@@ -18,12 +18,14 @@ public class DocumentTemplate {
         this.title = title;
     }
 
+    // Preserve the existing null contract; an absent collection is not an empty collection.
+    @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull")
     public List<SectionTemplate> getSections() {
-        return sections;
+        return sections == null ? null : new ArrayList<>(sections);
     }
 
     public void setSections(List<SectionTemplate> sections) {
-        this.sections = sections;
+        this.sections = sections == null ? null : new ArrayList<>(sections);
     }
 
     public static class SectionTemplate {

@@ -29,12 +29,14 @@ public class WeeklyPeerEvaluationReport {
         this.week = week;
     }
 
+    // Preserve the existing null contract; an absent collection is not an empty collection.
+    @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull")
     public List<PeerEvaluationAverage> getPeerEvaluationAverages() {
-        return peerEvaluationAverages;
+        return peerEvaluationAverages == null ? null : new ArrayList<>(peerEvaluationAverages);
     }
 
     public void setPeerEvaluationAverages(List<PeerEvaluationAverage> peerEvaluationAverages) {
-        this.peerEvaluationAverages = peerEvaluationAverages;
+        this.peerEvaluationAverages = peerEvaluationAverages == null ? null : new ArrayList<>(peerEvaluationAverages);
     }
 
 }

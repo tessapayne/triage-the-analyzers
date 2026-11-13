@@ -1,5 +1,7 @@
 package team.projectpulse.rubric.dto;
 
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public record RubricDto(
@@ -7,4 +9,7 @@ public record RubricDto(
         String rubricName,
         Set<CriterionDto> criteria,
         Integer courseId) {
+    public RubricDto {
+        criteria = criteria == null ? null : Collections.unmodifiableSet(new LinkedHashSet<>(criteria));
+    }
 }
