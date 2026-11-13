@@ -2,6 +2,8 @@ package team.projectpulse.notification.dto;
 
 import team.projectpulse.notification.SubmittableItem;
 
+import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,4 +14,7 @@ public record ReminderResultDto(SubmittableItem item,
                                 String week,
                                 int sent,
                                 List<OwingStudentDto> failed) {
+    public ReminderResultDto {
+        failed = failed == null ? null : Collections.unmodifiableList(new ArrayList<>(failed));
+    }
 }

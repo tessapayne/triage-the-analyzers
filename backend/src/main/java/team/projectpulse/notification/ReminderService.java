@@ -17,6 +17,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +70,9 @@ public class ReminderService {
                 this.emailService.sendReminderEmail(student.getEmail(), SUBJECT, body(section, student, entry.getValue(), week));
                 sent++;
             } catch (RuntimeException e) {
-                LOGGER.error("Could not send a submission reminder to {} in section {}", student.getEmail(), section.getSectionName(), e);
+                if (LOGGER.isErrorEnabled()) {
+                    LOGGER.error("Could not send a submission reminder to {} in section {}", student.getEmail(), section.getSectionName(), e);
+                }
                 failed.add(student);
             }
         }
@@ -118,6 +121,9 @@ public class ReminderService {
      * @param failed the students it did not, in the order they were tried
      */
     public record ReminderResult(int sent, List<Student> failed) {
+        public ReminderResult {
+            failed = failed == null ? null : Collections.unmodifiableList(new ArrayList<>(failed));
+        }
     }
 
 }

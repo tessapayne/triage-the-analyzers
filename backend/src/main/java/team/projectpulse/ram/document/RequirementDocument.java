@@ -51,19 +51,22 @@ public class RequirementDocument {
     @LastModifiedDate
     private Instant updatedAt;
 
-
     public RequirementDocument() {
     }
 
     public void addSection(DocumentSection section) {
-        if (section == null) return;
+        if (section == null) {
+            return;
+        }
 
         this.sections.add(section);
         section.setDocument(this);
     }
 
     public void removeSection(DocumentSection section) {
-        if (section == null) return;
+        if (section == null) {
+            return;
+        }
 
         this.sections.remove(section);
         if (section.getDocument() == this) {
@@ -72,14 +75,18 @@ public class RequirementDocument {
     }
 
     public void addCommentThread(CommentThread thread) {
-        if (thread == null) return;
+        if (thread == null) {
+            return;
+        }
 
         this.commentThreads.add(thread);
         thread.setDocument(this);
     }
 
     public void removeCommentThread(CommentThread thread) {
-        if (thread == null) return;
+        if (thread == null) {
+            return;
+        }
 
         this.commentThreads.remove(thread);
         if (thread.getDocument() == this) {
@@ -142,7 +149,7 @@ public class RequirementDocument {
     public void setStatus(DocumentStatus status) {
         this.status = status;
     }
-    
+
     public Set<CommentThread> getCommentThreads() {
         return commentThreads;
     }

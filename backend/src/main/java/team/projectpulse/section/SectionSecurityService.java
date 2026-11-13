@@ -75,21 +75,18 @@ public class SectionSecurityService {
         boolean hasInstructorRole = this.userUtils.hasRole("ROLE_instructor");
         if (hasStudentRole) {
             Student student = this.studentRepository.findById(userIdFromJwt).orElse(null);
-            if (student == null) {
-                return false;
-            }
-            // Check if the student's sectionId matches the sectionId from the request URI
-            return sectionId.equals(student.getSection().getSectionId());
+            return student != null
+                && student.getSection() != null
+                && sectionId.equals(student.getSection().getSectionId());
         } else if (hasInstructorRole) {
             // Get the list of instructorIds from the section object
             List<Integer> instructorIds = sectionToBeAccessed.getInstructors().stream()
                     .map(Instructor::getId)
                     .collect(Collectors.toList());
             return instructorIds.contains(userIdFromJwt);
-        } else {
+        }
             return false;
         }
-    }
 
     // Check if the instructor is in the same course as the section
     public boolean isSectionAndInstructorInSameCourse(Integer sectionId, Integer instructorId) {

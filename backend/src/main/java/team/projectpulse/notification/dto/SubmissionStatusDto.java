@@ -5,6 +5,8 @@ import team.projectpulse.notification.SubmittableItem;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,4 +26,7 @@ public record SubmissionStatusDto(SubmittableItem item,
                                   @JsonFormat(pattern = "HH:mm")
                                   LocalTime dueTime,
                                   List<OwingTeamDto> teams) {
+    public SubmissionStatusDto {
+        teams = teams == null ? null : Collections.unmodifiableList(new ArrayList<>(teams));
+    }
 }

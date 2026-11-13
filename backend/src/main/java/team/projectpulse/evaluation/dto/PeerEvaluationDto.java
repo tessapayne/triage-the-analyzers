@@ -27,4 +27,13 @@ public record PeerEvaluationDto(Integer evaluationId,
                                 LocalDateTime createdAt,
                                 @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy HH:mm:ss")
                                 LocalDateTime updatedAt) {
+    public PeerEvaluationDto {
+        if (ratings != null) {
+            ratings = List.copyOf(ratings);
+        }
+    }
+    @Override
+    public List<RatingDto> ratings() {
+        return ratings == null ? List.of() : List.copyOf(ratings);
+}
 }
